@@ -50,12 +50,9 @@ def payoff(s, K, type): # 1 is call, -1 is put
 def option_pricing(N,r,sigma,K,T, type_value=1, S0=100):
     temp_ST_factor = S0 * np.exp((r-0.5*sigma**2)*T) 
     vect_ST = []
-    for _ in range(N):
-        Z = np.random.randn()
-        STi =  temp_ST_factor * np.exp(sigma*np.sqrt(T)*Z)
-        vect_ST.append(STi)
+    Z = np.random.randn(N)  # generate N standard normal random numbers
+    vect_ST = temp_ST_factor * np.exp(sigma * np.sqrt(T) * Z)
 
-    vect_ST = np.array(vect_ST)
     option_price_estimate = 1/N*np.exp(-r*T)*sum(payoff(vect_ST, K, type_value))
     return option_price_estimate
 
