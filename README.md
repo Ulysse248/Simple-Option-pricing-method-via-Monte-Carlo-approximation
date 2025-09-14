@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Simple-Option-pricing-method-via-Monte-Carlo
 =======
 # Monte Carlo European Option Pricing
