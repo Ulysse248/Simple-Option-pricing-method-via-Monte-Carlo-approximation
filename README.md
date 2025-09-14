@@ -1,5 +1,3 @@
-# Simple-Option-pricing-method-via-Monte-Carlo
-=======
 # Monte Carlo European Option Pricing
 
 This Streamlit app visualizes European call and put option prices using a Monte Carlo simulation. 
