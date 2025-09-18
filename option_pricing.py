@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
+from pricing_methods import plot_grid, MonteCarloPricing, BlackScholesPricing
+
 st.title("Monte Carlo European Option Pricing")
 
 
@@ -37,69 +39,9 @@ grid_size=10
 # Grid
 r_values = np.linspace(r_min, r_max, grid_size)
 sigma_values = np.linspace(sigma_min, sigma_max, grid_size)
-r_val_plot = np.linspace(0.0, 0.1, grid_size+1)       # 0% to 10%
-sigma_val_plot = np.linspace(0.1, 0.6, grid_size+1)
 
-# Payoff function
-def payoff(s, K, type): # 1 is call, -1 is put
-    temp = type*(s-K)
-    temp[temp < 0]=0
-    return temp
+mc_Pricing = MonteCarloPricing(N, 1, 1, K, T, type_value, S0)
+plot_grid(r_values, sigma_values, mc_Pricing)
 
-# Option pricing function
-def option_pricing(N,r,sigma,K,T, type_value=1, S0=100):
-    temp_ST_factor = S0 * np.exp((r-0.5*sigma**2)*T) 
-    vect_ST = []
-    Z = np.random.randn(N)  # generate N standard normal random numbers
-    vect_ST = temp_ST_factor * np.exp(sigma * np.sqrt(T) * Z)
-
-    option_price_estimate = 1/N*np.exp(-r*T)*sum(payoff(vect_ST, K, type_value))
-    return option_price_estimate, vect_ST
-
-def variance_mc(vect_ST, N, K, T, r, type_value):
-    vect_payoff = payoff(vect_ST, K, type_value)
-    mean_vect_payoff = 1/N*sum(vect_payoff)
-    return 1/N*np.exp(-2*r*T)/(N-1)*(sum((vect_payoff-mean_vect_payoff)**2))
-
-# Building the price grid$
-price_grid = np.zeros((len(r_values), len(sigma_values)))
-variance_grid = np.zeros((len(r_values), len(sigma_values)))
-
-for i, r in enumerate(r_values):
-    for j, sigma in enumerate(sigma_values):
-        price, vect_ST= option_pricing(N, r, sigma, K, T, type_value=type_value, S0=100)
-        variance = variance_mc(vect_ST, N, K, T, r, type_value=type_value)
-        price_grid[i, j] = price
-        variance_grid[i,j] = variance
-
-# Plot heatmap
-fig, ax = plt.subplots(figsize=(14,10))
-# cax = ax.imshow(price_grid, origin='lower',
-#                 extent=[sigma_values[0], sigma_values[-1], r_values[0], r_values[-1]],
-#                 aspect='auto', cmap='viridis')
-cax = ax.imshow(price_grid, origin='lower', aspect='auto', cmap='viridis')
-ax.set_xticks(range(len(sigma_values)))
-ax.set_xticklabels([f"{s:.2f}" for s in sigma_values])
-ax.set_yticks(range(len(r_values)))
-ax.set_yticklabels([f"{r:.2f}" for r in r_values])
-
-fig.colorbar(cax, label='Option price')
-
-# Annotate each cell at the center
-for i in range(len(r_values)):
-    for j in range(len(sigma_values)):
-        price = price_grid[i, j]
-        variance = variance_grid[i,j]
-        # Use pixel indices as coordinates
-        ax.text(j, i, f"{price:.2f}", color='black', ha='center', va='center', fontsize=12)
-        ax.text(j, i-0.3, f"{np.sqrt(variance):.2f}", color='black', ha='center', va='center', fontsize=9)
-
-plt.xlabel('Volatility σ')
-plt.ylabel('Risk-free rate r')
-plt.title('European Option Price Grid')
-plt.show()
-
-ax.set_xlabel('Volatility σ')
-ax.set_ylabel('Risk-free rate r')
-plt.title('European Option Price (and std) Grid')# T=2, K=110')
-st.pyplot(fig)
+bs_Pricing = BlackScholesPricing(1, 1, K, T, type_value, S0)
+plot_grid(r_values, sigma_values, bs_Pricing)

@@ -1,8 +1,8 @@
 # Monte Carlo European Option Pricing
 
-This Streamlit app visualizes European call and put option prices using a Monte Carlo simulation. 
+This Streamlit app visualizes European call and put option prices using a Monte Carlo simulation. I also added a grid with prices computed with closed form Black-Scholes solution to have a ground truth comparison.
 
-Dependencies: Streamlit, NumPy, Matplotlib.
+Dependencies: Streamlit, NumPy, Matplotlib, Scipy.
 
 ## Usage
 To use this repository:
