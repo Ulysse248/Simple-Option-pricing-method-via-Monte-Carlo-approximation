@@ -30,7 +30,7 @@ The app then computes and displays a **grid showing the estimated option price**
 
 ## Example
 
-![Monte Carlo Option Pricing App](img_option_pricing-1.png)
-![Monte Carlo Option Pricing App](img_option_pricing-2.png)
+![Monte Carlo Option Pricing App](img/img_option_pricing-1.png)
+![Monte Carlo Option Pricing App](img/img_option_pricing-2.png)
 
 # Simple-Option-pricing-method-via-Monte-Carlo
